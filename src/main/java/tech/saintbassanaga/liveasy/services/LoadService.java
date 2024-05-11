@@ -2,30 +2,30 @@ package tech.saintbassanaga.liveasy.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import tech.saintbassanaga.liveasy.dtos.PayLoadDto;
-import tech.saintbassanaga.liveasy.entity.PayLoad;
-import tech.saintbassanaga.liveasy.repository.PayLoadRepository;
+import tech.saintbassanaga.liveasy.entity.Load;
+import tech.saintbassanaga.liveasy.repository.LoadRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class PayLoadService {
-    private final PayLoadRepository payLoadRepository;
+public class LoadService {
+    private final LoadRepository loadRepository;
 
-    public PayLoadService(PayLoadRepository payLoadRepository) {
-        this.payLoadRepository = payLoadRepository;
+    public LoadService(LoadRepository loadRepository) {
+        this.loadRepository = loadRepository;
     }
 
     /**
      *
-     * @param payLoad load Details Holder object
+     * @param load load Details Holder object
      * @return Success Message if create or an Error if it is not
      */
 
-    public String createLoad(PayLoad payLoad){
-        payLoad.setShipperId(UUID.randomUUID());
-        payLoadRepository.save(payLoad);
+    public String createLoad(Load load){
+        //load.setShipperId(UUID.randomUUID());
+        loadRepository.save(load);
         return "Loads details added successfully ";
     }
 
@@ -35,10 +35,8 @@ public class PayLoadService {
      * @return A found not just an message if not found
      */
 
-    public PayLoadDto findById(UUID id){
-        return payLoadRepository.findPayLoadById(id).orElseThrow(
-                ()->new RuntimeException("The is no loads with this Id")
-        );
+    public Optional<Load> findById(UUID id){
+        return loadRepository.findById(id);
     }
 
     /**
@@ -47,33 +45,29 @@ public class PayLoadService {
      * @return A list of found Loads
      */
 
-    public List<PayLoadDto> payLoadList(UUID uuid){
-        return payLoadRepository.findPayLoadsByShipperId(uuid).orElseThrow(
-               ()-> new RuntimeException("There is no load with for the shipper Id you provide")
-       );
+    public List<Load> payLoadList(UUID uuid){
+        return loadRepository.findLoadsByShipperId(uuid);
     }
 
     /**
      *
-     * @param uuid : it is a Id of the payLoad to be Updated
-     * @param payLoad it is the load change handler data that will be applied the founded load
-     * @return payLoadCheck : The final load to be sand to the repository
+     * @param uuid : it is a Id of the load to be Updated
+     * @param load it is the load change handler data that will be applied the founded load
      */
 
-    public PayLoad updatePayLoad(UUID uuid, PayLoadDto payLoad){
-        PayLoad payLoadChecked = payLoadRepository.findById(uuid).orElseThrow(()->  new RuntimeException("PayLoad Not Found"));
-        if (payLoadChecked != null){
-            payLoadChecked.setLoadingPoint(payLoad.loadingPoint());
-            payLoadChecked.setUnloadingPoint(payLoad.unloadingPoint());
-            payLoadChecked.setProductType(payLoad.productType());
-            payLoadChecked.setTruckType(payLoad.truckType());
-            payLoadChecked.setNoOfTrucks(payLoad.noOfTrucks());
-            payLoadChecked.setWeight(payLoad.weight());
-            payLoadChecked.setComment(payLoad.comment());
-            payLoadChecked.setDate(payLoad.date());
-            payLoadRepository.save(payLoadChecked);
+    public void updatePayLoad(UUID uuid, Load load){
+        Load loadChecked = loadRepository.findById(uuid).orElseThrow(()->  new RuntimeException("PayLoad Not Found"));
+        if (loadChecked != null){
+            loadChecked.setLoadingPoint(load.getLoadingPoint());
+            loadChecked.setUnloadingPoint(load.getUnloadingPoint());
+            loadChecked.setProductType(load.getProductType());
+            loadChecked.setTruckType(load.getTruckType());
+            loadChecked.setNoOfTrucks(load.getNoOfTrucks());
+            loadChecked.setWeight(load.getWeight());
+            loadChecked.setComment(load.getComment());
+            loadChecked.setDate(load.getDate());
+            loadRepository.save(loadChecked);
         }
-        return payLoadChecked;
     }
 
     /**
@@ -85,8 +79,8 @@ public class PayLoadService {
 
     @Transactional
     public void deletePayLoad(UUID uuid){
-        PayLoad load = payLoadRepository.findById(uuid).orElseThrow(()->new RuntimeException("There is not load with that Id"));
+        Load load = loadRepository.findById(uuid).orElseThrow(()->new RuntimeException("There is not load with that Id"));
         if (load != null)
-            payLoadRepository.deletePayLoadById(uuid);
+            loadRepository.deletePayLoadById(uuid);
     }
 }

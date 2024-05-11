@@ -4,52 +4,66 @@ package tech.saintbassanaga.liveasy.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import tech.saintbassanaga.liveasy.dtos.PayLoadDto;
-import tech.saintbassanaga.liveasy.entity.PayLoad;
-import tech.saintbassanaga.liveasy.services.PayLoadService;
+import tech.saintbassanaga.liveasy.entity.Load;
+import tech.saintbassanaga.liveasy.repository.LoadRepository;
+import tech.saintbassanaga.liveasy.services.LoadService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "load")
 public class PayLoadController {
-    private final PayLoadService payLoadService;
+    private final LoadService loadService;
+    private final LoadRepository loadRepository;
 
-    public PayLoadController(PayLoadService payLoadService) {
-        this.payLoadService = payLoadService;
+    public PayLoadController(LoadService loadService, LoadRepository loadRepository) {
+        this.loadService = loadService;
+        this.loadRepository = loadRepository;
     }
 
-    @GetMapping(value = "{loaId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "load/{loaId}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public PayLoadDto findLoad(@PathVariable UUID loaId) {
-        return payLoadService.findById(loaId);
+    public ResponseEntity<Load> findLoad(@PathVariable UUID loaId) {
+        Optional<Load> load = loadService.findById(loaId);
+        return load.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "load", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public String createLoad(@RequestBody PayLoad payLoad) {
-        return payLoadService.createLoad(payLoad);
+    @Transactional
+    public ResponseEntity<String> createLoad(@RequestBody Load load) {
+        return ResponseEntity.
+                ok().body(loadService.createLoad(load));
     }
 
 
-    @GetMapping(value = "{shipperId}")
+    @GetMapping(value = "load")
     @ResponseStatus(HttpStatus.OK)
-    public List<PayLoadDto> payLoadList(@PathVariable UUID shipperId) {
-        return payLoadService.payLoadList(shipperId);
+    public ResponseEntity<List<Load>> payLoadList(@RequestParam UUID shipperId) {
+        List<Load> load = loadService.payLoadList(shipperId);
+        if (load.isEmpty())
+            ResponseEntity.notFound().build();
+        return ResponseEntity.ok(load);
     }
 
-    @PutMapping(value = "{loadId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "load/{loadId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<PayLoad> update(@PathVariable UUID loadId, @RequestBody PayLoadDto payLoad) {
-        return ResponseEntity.ok(payLoadService.updatePayLoad(loadId, payLoad));
+    public ResponseEntity<String> update(@PathVariable UUID loadId, @RequestBody Load load) {
+        loadService.updatePayLoad(loadId, load);
+        return ResponseEntity.ok("Load Details Updated SuccessFully");
     }
 
-    @DeleteMapping(value = "{loadId}")
+    @DeleteMapping(value = "load/{loadId}")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public String delete(@PathVariable(value = "loadId") UUID uuid) {
-        payLoadService.deletePayLoad(uuid);
-        return "Payload Deleted Successfully !";
+        Optional <Load> load = loadRepository.findById(uuid);
+        if (load.isPresent()){
+            loadService.deletePayLoad(uuid);
+            return "Load Deleted Successfully !";
+        }
+        return "Load Not found !";
     }
 }
