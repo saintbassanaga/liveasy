@@ -26,11 +26,7 @@ public class PayLoad {
     private String noOfTrucks;
     private Long weight;
     private String comment;
-
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "shipper_id", nullable = false, unique = true)
-    private Shipper shipper;
-
+    private UUID shipperId;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private Date date;
 

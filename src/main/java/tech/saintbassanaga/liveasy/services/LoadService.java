@@ -24,6 +24,7 @@ public class PayLoadService {
      */
 
     public String createLoad(PayLoad payLoad){
+        payLoad.setShipperId(UUID.randomUUID());
         payLoadRepository.save(payLoad);
         return "Loads details added successfully ";
     }
