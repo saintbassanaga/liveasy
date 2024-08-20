@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: liveasy_container
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: verysecret&7
+      POSTGRES_DB: liveasy_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network
+
+volumes:
+  postgres_data:
+
+networks:
+  my_network:

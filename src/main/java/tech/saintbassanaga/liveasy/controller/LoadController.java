@@ -15,11 +15,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-public class PayLoadController {
+public class LoadController {
     private final LoadService loadService;
     private final LoadRepository loadRepository;
 
-    public PayLoadController(LoadService loadService, LoadRepository loadRepository) {
+    public LoadController(LoadService loadService, LoadRepository loadRepository) {
         this.loadService = loadService;
         this.loadRepository = loadRepository;
     }

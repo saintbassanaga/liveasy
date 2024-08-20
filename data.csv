@@ -1,0 +1,6 @@
+id,loadingPoint,unloadingPoint,productType,truckType,noOfTrucks,weight,comment,shipperId,date
+d290f1ee-6c54-4b01-90e6-d701748f0851,Mumbai,Delhi,Steel,Container,5,15000,Urgent delivery required,123e4567-e89b-12d3-a456-426614174000,0024-08-25 01:00:00.000000
+e9101b3f-3f2c-4f25-9c8d-ec678fb71b88,Chennai,Bangalore,Cement,Open Truck,3,12000,Handle with care,223e4567-e89b-12d3-a456-426614174000,0024-08-20 01:00:00.000000
+f380e75f-4a62-4e27-8f19-6741b8b71755,Kolkata,Hyderabad,Electronics,Refrigerated,2,8000,Temperature sensitive,323e4567-e89b-12d3-a456-426614174000,0024-08-22 01:00:00.000000
+a170f2cc-9e62-4a8f-a6e0-c4b0916ed0a1,Pune,Ahmedabad,Fertilizer,Tanker,4,10000,Non-hazardous,423e4567-e89b-12d3-a456-426614174000,0024-08-18 01:00:00.000000
+b480d85d-5f5a-4a65-b19c-d1d81c9a8e3e,Jaipur,Surat,Textiles,Flatbed,6,20000,Fragile items,523e4567-e89b-12d3-a456-426614174000,0024-08-23 01:00:00.000000
